@@ -1,0 +1,327 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel del Administrador | Classroom Chucky</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Iconos -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f3f4fb;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* LAYOUT GENERAL (IGUAL QUE ESTUDIANTE) */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR ADMIN */
+        .sidebar-admin {
+            width: 260px;
+            background: #0d47a1;
+            color: #fff;
+            padding: 30px 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-admin h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-admin small {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .sidebar-admin nav {
+            margin-top: 18px;
+            flex-grow: 1;
+        }
+
+        .sidebar-admin a {
+            color: #e5e7eb;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+        }
+
+        .sidebar-admin a i {
+            font-size: 18px;
+        }
+
+        .sidebar-admin a:hover {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+        }
+
+        /* CONTENIDO PRINCIPAL */
+        .main-admin {
+            flex: 1;
+            padding: 32px 40px;
+        }
+
+        .header h1 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .header .subtext {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* GRID DE CARDS (MISMA ONDA QUE ESTUDIANTE) */
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            margin-top: 28px;
+            margin-bottom: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card-box {
+            background: #ffffff;
+            padding: 18px 18px 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(15,23,42,0.08);
+            transition: 0.2s ease-out;
+        }
+
+        .card-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 30px rgba(15,23,42,0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .card-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e0ecff;
+            color: #1d4ed8;
+            font-size: 18px;
+        }
+
+        .card-box h3 {
+            font-size: 18px;
+            margin: 0;
+            color: #0d47a1;
+        }
+
+        .card-box p {
+            color: #4b5563;
+            font-size: 14px;
+            margin-top: 6px;
+            margin-bottom: 10px;
+        }
+
+        .card-box a button {
+            margin-top: 5px;
+            padding: 8px 14px;
+            border: none;
+            background: #0d47a1;
+            color: white;
+            font-weight: 600;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .card-box a button:hover {
+            background: #08306b;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar-admin {
+                width: 100%;
+                flex-direction: row;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .sidebar-admin nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-top: 0;
+            }
+
+            .sidebar-admin a {
+                margin-bottom: 0;
+            }
+
+            .main-admin {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR ADMIN -->
+    <aside class="sidebar-admin">
+        <div>
+            <h2>Administrador</h2>
+            <small>Panel de control • ChuckyDB</small>
+        </div>
+
+        <nav>
+            <a href="{% url 'panel_admin' %}">
+                <i class="bi bi-speedometer2"></i> Inicio
+            </a>
+
+            <a href="{% url 'admin_listar_estudiantes' %}">
+                <i class="bi bi-people"></i> Gestionar Usuarios
+            </a>
+
+            <a href="{% url 'admin_listar_cursos' %}">
+                <i class="bi bi-journal-bookmark"></i> Gestionar Cursos
+            </a>
+
+            <a href="{% url 'admin_inscripciones' %}">
+                <i class="bi bi-journal-check"></i> Inscripciones
+            </a>
+
+            <a href="{% url 'admin_reportes' %}">
+                <i class="bi bi-clipboard-data"></i> Reportes
+            </a>
+        </nav>
+
+        <div>
+            <a href="{% url 'logout' %}">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-admin">
+
+        <div class="header">
+            <h1>Hola, {{ request.user.first_name }} 👋</h1>
+            <p class="subtext">
+                Este es tu panel central de administración. Desde aquí puedes gestionar usuarios, cursos,
+                inscripciones y revisar reportes generales de la plataforma.
+            </p>
+        </div>
+
+        <h2 class="section-title">Gestiones principales</h2>
+
+        <div class="grid">
+
+            <div class="card-box">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h3>Usuarios</h3>
+                </div>
+                <p>
+                    Crear, editar y administrar estudiantes y usuarios registrados
+                    en Classroom Chucky. Ideal para mantener la matrícula actualizada.
+                </p>
+                <a href="{% url 'admin_listar_estudiantes' %}">
+                    <button>Administrar Usuarios</button>
+                </a>
+            </div>
+
+            <div class="card-box">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                    </div>
+                    <h3>Cursos</h3>
+                </div>
+                <p>
+                    Gestionar cursos, niveles y descripciones generales de la oferta formativa.
+                </p>
+                <a href="{% url 'admin_listar_cursos' %}">
+                    <button>Administrar Cursos</button>
+                </a>
+            </div>
+
+            <div class="card-box">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="bi bi-journal-check"></i>
+                    </div>
+                    <h3>Inscripciones</h3>
+                </div>
+                <p>
+                    Revisar qué estudiantes están inscritos en cada curso
+                    y obtener una vista global de la participación.
+                </p>
+                <a href="{% url 'admin_inscripciones' %}">
+                    <button>Ver Inscripciones</button>
+                </a>
+            </div>
+
+            <div class="card-box">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="bi bi-clipboard-data"></i>
+                    </div>
+                    <h3>Reportes</h3>
+                </div>
+                <p>
+                    Consultar reportes y estadísticas de rendimiento,
+                    seguimiento académico y otros indicadores clave.
+                </p>
+                <a href="{% url 'admin_reportes' %}">
+                    <button>Ver Reportes</button>
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

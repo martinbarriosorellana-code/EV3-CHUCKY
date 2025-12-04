@@ -1,0 +1,213 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Usuario Normal | Chucky Escuela</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Iconos Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f6fb;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #1d4ed8;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            height: 100%;
+        }
+
+        .sidebar h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 12px;
+            display: block;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        /* Contenido principal */
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .subtext {
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 22px;
+            margin-top: 20px;
+        }
+
+        .card-box {
+            background: white;
+            padding: 18px 20px;
+            border-radius: 14px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+            transition: 0.2s ease-out;
+        }
+
+        .card-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 22px rgba(0,0,0,0.12);
+        }
+
+        .card-box h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #1d4ed8;
+        }
+
+        .card-box p {
+            color: #4b5563;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .card-box a button {
+            width: 100%;
+            padding: 9px 14px;
+            border-radius: 10px;
+            border: none;
+            background: #1d4ed8;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .card-box a button:hover {
+            background: #1e40af;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2>Chucky Usuario</h2>
+
+        <!-- Inicio usuario normal -->
+        <a href="{% url 'panel_usuario' %}">
+            <i class="bi bi-speedometer2"></i> Inicio
+        </a>
+
+        <!-- Ver listado general de cursos -->
+        <a href="{% url 'listar_cursos' %}">
+            <i class="bi bi-journal-bookmark"></i> Ver Cursos
+        </a>
+
+        <!-- (Opcional) Mis cursos no inscribe nada, pero puede ver catálogo completo -->
+        <a href="{% url 'mis_cursos' %}">
+            <i class="bi bi-collection"></i> Catálogo de Cursos
+        </a>
+
+        <!-- Cerrar sesión -->
+        <a href="{% url 'logout' %}">
+            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+        </a>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main">
+
+        <div class="header">
+            <h1>Hola, {{ request.user.first_name }} 👋</h1>
+            <p class="subtext">
+                Este es tu panel como <strong>usuario normal</strong> de Chucky Escuela.
+                Puedes revisar el catálogo de cursos disponibles y la información académica general.
+            </p>
+        </div>
+
+        <h2 style="color:#111827; margin-top:22px; margin-bottom:12px; font-size:20px;">
+            Accesos rápidos
+        </h2>
+
+        <div class="grid">
+
+            <div class="card-box">
+                <h3><i class="bi bi-journal-bookmark"></i> Ver todos los cursos</h3>
+                <p>
+                    Consulta el listado completo de cursos disponibles en la plataforma,
+                    con su nivel y descripción.
+                </p>
+                <a href="{% url 'listar_cursos' %}">
+                    <button>Ir a Cursos</button>
+                </a>
+            </div>
+
+            <div class="card-box">
+                <h3><i class="bi bi-collection"></i> Catálogo académico</h3>
+                <p>
+                    Accede a la vista de catálogo donde se muestran todos los cursos
+                    disponibles para los estudiantes.
+                </p>
+                <a href="{% url 'mis_cursos' %}">
+                    <button>Ver Catálogo</button>
+                </a>
+            </div>
+
+            <div class="card-box">
+                <h3><i class="bi bi-info-circle"></i> Perfil institucional</h3>
+                <p>
+                    Recuerda usar siempre tu correo institucional
+                    <strong>{{ request.user.email }}</strong> para ingresar al sistema.
+                </p>
+                <a href="#">
+                    <button disabled>Perfil (próximamente)</button>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

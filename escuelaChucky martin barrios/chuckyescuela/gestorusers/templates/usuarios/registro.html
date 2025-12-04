@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chucky Escuela &mdash; Registro Acad&eacute;mico</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- ICONOS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #eef2f6;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 1150px;
+            height: 760px;
+            display: flex;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0px 25px 45px rgba(0,0,0,.25);
+            animation: fadeIn .7s ease-in-out;
+        }
+
+        /* PANEL IZQUIERDO */
+        .left-panel {
+            width: 45%;
+            background: linear-gradient(135deg,#1e3a8a,#1e40af,#2563eb);
+            padding: 80px 50px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideLeft 1s ease;
+        }
+
+        .icon-edu {
+            font-size: 85px;
+            margin-bottom: 40px;
+        }
+
+        .left-panel h1 {
+            font-size: 46px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .left-panel p {
+            font-size: 17px;
+            opacity: .95;
+            line-height: 1.6;
+        }
+
+        /* PANEL DERECHO */
+        .right-panel {
+            width: 55%;
+            padding: 55px 65px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right-panel h2 {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .right-panel p.desc {
+            font-size: 15px;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .form-control,
+        .form-select {
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            border: 1px solid #cbd5e1;
+            transition: .3s;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37,99,235,.22);
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 16px;
+            background: #2563eb;
+            border: none;
+            color: white;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .btn-register:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: #e2e8f0;
+            color: #1e293b;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            margin-top: 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-login:hover {
+            background: #cbd5e1;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .msg-box {
+            margin-bottom: 18px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(.97); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideLeft {
+            from { transform: translateX(-60px); opacity: 0; }
+            to   { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+
+    <!-- PANEL IZQUIERDO -->
+    <div class="left-panel">
+        <i class="fa-solid fa-graduation-cap icon-edu"></i>
+        <h1>Crear Cuenta</h1>
+        <p>
+            Registra tu cuenta institucional para acceder al sistema acad&eacute;mico,
+            cursos, notas, docentes y servicios internos.
+        </p>
+    </div>
+
+    <!-- PANEL DERECHO -->
+    <div class="right-panel">
+
+        <!-- T&Iacute;TULO Y DESCRIPCI&Oacute;N -->
+        <div class="mb-3">
+            <h2>Registro Acad&eacute;mico</h2>
+            <p class="desc">
+                Completa la informaci&oacute;n solicitada para crear tu cuenta institucional.
+            </p>
+        </div>
+
+        <!-- MENSAJES -->
+        {% if messages %}
+        <div class="msg-box">
+            {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }} text-center">{{ msg }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- FORMULARIO -->
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+
+            <!-- Campos falsos para desactivar autocompletar raro -->
+            <input type="text" name="fakeuser" style="display:none">
+            <input type="password" name="fakepass" style="display:none">
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" class="form-control" required autocomplete="off">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Apellido</label>
+                    <input type="text" name="apellido" class="form-control" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label>Correo institucional</label>
+                <input type="email"
+                       name="correo"
+                       class="form-control"
+                       placeholder="nombre@chuckyescuela.cl"
+                       required
+                       autocomplete="email">
+            </div>
+
+            <div class="mb-3">
+                <label>Tipo de Usuario</label>
+                <select name="tipo_usuario" class="form-select" id="rolSelect" required>
+                    <option value="" disabled selected>Seleccione una opci&oacute;n</option>
+                    <option value="estudiante">Estudiante</option>
+                    <!-- 👇 Solo se cambió el texto, el value sigue siendo 'docente' -->
+                    <option value="docente">Usuario normal</option>
+                    <option value="administrador">Administrador</option>
+                </select>
+            </div>
+
+            <!-- RUT SOLO PARA ESTUDIANTES -->
+            <div class="mb-3" id="campoRut" style="display:none;">
+                <label>RUT del Estudiante</label>
+                <input type="text"
+                       name="rut"
+                       class="form-control"
+                       placeholder="12.345.678-9"
+                       autocomplete="off">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>Contrase&ntilde;a</label>
+                    <input type="password"
+                           name="password"
+                           class="form-control"
+                           required
+                           autocomplete="new-password">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Repetir contrase&ntilde;a</label>
+                    <input type="password"
+                           name="password2"
+                           class="form-control"
+                           required
+                           autocomplete="new-password">
+                </div>
+            </div>
+
+            <!-- BOTONES -->
+            <button class="btn-register" type="submit">
+                Crear Cuenta
+            </button>
+
+            <a href="{% url 'login' %}" class="btn-login">
+                &iquest;Ya tienes cuenta? Inicia sesi&oacute;n
+            </a>
+        </form>
+
+        <div class="footer">
+            &copy; 2025 &middot; Plataforma Chucky Escuela &middot; Registro Institucional
+        </div>
+
+    </div>
+</div>
+
+<!-- SCRIPT: mostrar RUT solo a estudiantes -->
+<script>
+    const selectRol = document.getElementById("rolSelect");
+    const campoRut = document.getElementById("campoRut");
+    const inputRut = campoRut.querySelector("input");
+
+    selectRol.addEventListener("change", () => {
+        if (selectRol.value === "estudiante") {
+            campoRut.style.display = "block";
+            inputRut.required = true;
+        } else {
+            campoRut.style.display = "none";
+            inputRut.required = false;
+        }
+    });
+</script>
+
+</body>
+</html>

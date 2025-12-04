@@ -1,0 +1,267 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Estudiantes</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- Iconos Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- DataTables + Bootstrap 5 -->
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+
+    <style>
+        body {
+            background: #eef2f7;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Tarjeta principal */
+        .panel-box {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 35px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        /* Título */
+        .panel-title {
+            font-size: 30px;
+            font-weight: 800;
+            color: #0d47a1;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .panel-subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        /* Encabezado tabla */
+        .table-header {
+            background: #0d47a1;
+            color: white;
+        }
+
+        /* Filas con hover */
+        tbody tr:hover {
+            background: #e7f0ff !important;
+            transition: 0.2s;
+        }
+
+        /* Botón volver */
+        .btn-back {
+            border-radius: 10px;
+            padding: 10px 20px;
+            background: #0d47a1;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover {
+            background: #062e6f;
+        }
+
+        /* Botón nuevo estudiante */
+        .btn-new {
+            border-radius: 10px;
+            padding: 8px 16px;
+            background: #0d47a1;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .btn-new:hover {
+            background: #062e6f;
+            color: #fff;
+        }
+
+        /* Botones de acción */
+        .btn-action {
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 13px;
+        }
+
+        .btn-edit {
+            background: #0d47a1;
+            color: #fff;
+        }
+
+        .btn-edit:hover {
+            background: #062e6f;
+            color: #fff;
+        }
+
+        .btn-delete {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background: #991b1b;
+            color: #fff;
+        }
+
+        /* Animación suave */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- CAJA PRINCIPAL -->
+    <div class="panel-box">
+
+        <h1 class="panel-title">
+            <i class="bi bi-people-fill"></i> Gestión de Estudiantes
+        </h1>
+
+        <p class="panel-subtitle">
+            Listado académico de estudiantes registrados en la plataforma.
+        </p>
+
+        <!-- FILA SUPERIOR: Botón Nuevo Estudiante -->
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{% url 'admin_crear_estudiante' %}" class="btn btn-new">
+                <i class="bi bi-person-plus-fill me-1"></i> Nuevo Estudiante
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <!-- 👇 ID para DataTable -->
+            <table id="tabla_estudiantes" class="table table-hover table-bordered align-middle">
+
+                <thead class="table-header">
+                    <tr>
+                        <th>Nombre completo</th>
+                        <th>Correo institucional</th>
+                        <th>RUT</th>
+                        <th>Nivel</th>
+                        <th>Cursos inscritos</th>
+                        <th>Fecha registro</th>
+                        <th>Resumen acad&eacute;mico</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for est in estudiantes %}
+                    <tr>
+                        <!-- Nombre -->
+                        <td>
+                            <strong>{{ est.user.first_name }} {{ est.user.last_name }}</strong>
+                        </td>
+
+                        <!-- Correo -->
+                        <td>{{ est.user.email }}</td>
+
+                        <!-- RUT -->
+                        <td>{{ est.rut|default:"—" }}</td>
+
+                        <!-- Nivel académico (si lo tienes en el modelo Estudiante) -->
+                        <td>
+                            {{ est.nivel|default:"Sin nivel" }}
+                        </td>
+
+                        <!-- Total de cursos inscritos (calculado en la vista) -->
+                        <td class="text-center">
+                            {{ est.total_cursos|default:"0" }}
+                        </td>
+
+                        <!-- Fecha de registro -->
+                        <td>
+                            {{ est.fecha_registro|date:"d/m/Y"|default:"—" }}
+                        </td>
+
+                        <!-- Resumen académico basado en los cursos -->
+                        <td class="text-center">
+                            {% if est.total_cursos == 0 %}
+                                Sin cursos inscritos
+                            {% elif est.total_cursos == 1 %}
+                                1 curso inscrito
+                            {% else %}
+                                {{ est.total_cursos }} cursos inscritos
+                            {% endif %}
+                        </td>
+
+                        <!-- ACCIONES -->
+                        <td class="text-center">
+                            <a href="{% url 'admin_editar_estudiante' est.id %}"
+                               class="btn btn-action btn-edit mb-1">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                            <a href="{% url 'admin_eliminar_estudiante' est.id %}"
+                               class="btn btn-action btn-delete"
+                               onclick="return confirm('¿Seguro que deseas eliminar este estudiante?');">
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-3">
+                            <i class="bi bi-exclamation-circle"></i>
+                            No hay estudiantes registrados.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+        <!-- BOTÓN VOLVER -->
+        <div class="text-center mt-3">
+            <a href="{% url 'panel_admin' %}" class="btn btn-back">
+                <i class="bi bi-arrow-left-circle"></i> Volver al Panel
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================== -->
+<!--   SCRIPTS DATATABLE   -->
+<!-- ===================== -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    // Inicializar DataTable con configuración básica en español
+    $(document).ready(function () {
+        $('#tabla_estudiantes').DataTable({
+            pageLength: 10,
+            lengthMenu: [5, 10, 25, 50],
+            order: [[0, 'asc']],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json"
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

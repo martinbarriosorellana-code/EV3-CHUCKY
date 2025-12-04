@@ -1,0 +1,309 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel del Estudiante | Chucky Escuela</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- Iconos -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background: #eef2f7;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .container-panel {
+            max-width: 1200px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg,#1e3a8a,#1d4ed8,#2563eb);
+            color: white;
+            border-radius: 18px;
+            padding: 24px 26px;
+            box-shadow: 0 12px 30px rgba(15,23,42,0.25);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hero-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        .hero-title {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .hero-sub {
+            font-size: 14px;
+            opacity: .9;
+        }
+
+        .hero-tags span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(15,23,42,0.2);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-top: 6px;
+        }
+
+        .section-title {
+            margin-top: 26px;
+            margin-bottom: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .card-soft {
+            background: white;
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: 0 6px 18px rgba(15,23,42,0.09);
+            height: 100%;
+        }
+
+        .stat-number {
+            font-size: 26px;
+            font-weight: 800;
+            color: #0d47a1;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .badge-curso {
+            border-radius: 999px;
+            font-size: 11px;
+            padding: 3px 8px;
+        }
+
+        tbody tr:hover {
+            background: #e7f0ff !important;
+            transition: 0.15s;
+        }
+
+        .btn-main {
+            background: #2563eb;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-main:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-outline-soft {
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container container-panel">
+
+    <!-- HERO / CARTA DE PRESENTACIÓN -->
+    <div class="hero-card mb-4">
+        <div class="hero-avatar">
+            {% if request.user.first_name %}
+                {{ request.user.first_name|first|upper }}
+            {% else %}
+                {{ request.user.username|first|upper }}
+            {% endif %}
+        </div>
+
+        <div class="flex-fill">
+            <div class="hero-title">
+                ¡Hola, {{ request.user.first_name|default:"Estudiante" }}! 👋
+            </div>
+            <div class="hero-sub">
+                Este es tu panel académico en <strong>Chucky Escuela</strong>.  
+                Aquí puedes revisar tus cursos inscritos, explorar nuevas asignaturas y ver un resumen
+                rápido de tu avance.
+            </div>
+
+            <div class="hero-tags mt-2">
+                <span><i class="bi bi-person-badge-fill"></i> Rol: Estudiante</span>
+                <span><i class="bi bi-envelope-fill"></i> {{ request.user.email }}</span>
+                <span><i class="bi bi-calendar-check"></i> Cursos inscritos: {{ total_cursos }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESUMEN RÁPIDO -->
+    <div class="section-title">Resumen de tu actividad</div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card-soft">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="stat-label">Cursos en los que estás inscrito</span>
+                    <i class="bi bi-journal-check"></i>
+                </div>
+                <div class="stat-number">{{ total_cursos }}</div>
+                <p class="mt-2 mb-0" style="font-size:13px;">
+                    Este número corresponde al total de cursos activos donde ya te registraste.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-soft">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="stat-label">Progreso general</span>
+                    <i class="bi bi-bar-chart-steps"></i>
+                </div>
+                <div class="stat-number">
+                    {% if total_cursos > 0 %}
+                        60%
+                    {% else %}
+                        0%
+                    {% endif %}
+                </div>
+                <p class="mt-2 mb-0" style="font-size:13px;">
+                    Indicador referencial. Puedes mejorarlo revisando tus contenidos y manteniendo tus cursos al día.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-soft">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="stat-label">Siguiente paso recomendado</span>
+                    <i class="bi bi-lightbulb"></i>
+                </div>
+                <p class="mt-2 mb-2" style="font-size:14px;">
+                    Revisa la sección <strong>"Mis cursos"</strong> para ver detalles y contenidos,
+                    o explora nuevos cursos disponibles en la plataforma.
+                </p>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'mis_cursos' %}" class="btn btn-main btn-sm flex-fill">
+                        <i class="bi bi-collection-play"></i> Ver Mis cursos
+                    </a>
+                    <a href="{% url 'listar_cursos' %}" class="btn btn-outline-soft btn-sm flex-fill">
+                        <i class="bi bi-search"></i> Explorar cursos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFORMACIÓN PERSONAL + RECOMENDACIONES -->
+    <div class="section-title">Tu ficha rápida</div>
+
+    <div class="row g-3">
+        <!-- FICHA PERSONAL -->
+        <div class="col-md-6">
+            <div class="card-soft">
+                <h5 class="mb-3">
+                    <i class="bi bi-person-lines-fill"></i> Información personal
+                </h5>
+                <p class="mb-1"><strong>Nombre:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p>
+                <p class="mb-1"><strong>Correo institucional:</strong> {{ request.user.email }}</p>
+                <p class="mb-1"><strong>Usuario de acceso:</strong> {{ request.user.username }}</p>
+                <p class="mb-0" style="font-size:13px; color:#6b7280;">
+                    Estos datos corresponden a tu cuenta institucional registrada en el sistema Chucky Escuela.
+                    Si detectas algún error, comunícate con el administrador.
+                </p>
+            </div>
+        </div>
+
+        <!-- RECOMENDACIONES -->
+        <div class="col-md-6">
+            <div class="card-soft">
+                <h5 class="mb-3">
+                    <i class="bi bi-stars"></i> Recomendaciones académicas
+                </h5>
+                <ul style="font-size:14px; padding-left:18px;">
+                    <li>Revisa al menos una vez por semana tus cursos inscritos para no olvidar fechas importantes.</li>
+                    <li>Utiliza el correo institucional para comunicarte con tus docentes o administradores.</li>
+                    <li>Mantén tus datos personales actualizados para recibir notificaciones correctamente.</li>
+                    <li>Si tienes muchos cursos, prioriza los que consideres más complejos para avanzar primero.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLA DE CURSOS INSCRITOS -->
+    <div class="section-title">Tus cursos inscritos</div>
+
+    <div class="card-soft">
+        {% if inscripciones %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Curso</th>
+                            <th>Nivel</th>
+                            <th>Descripción</th>
+                            <th style="width: 150px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ins in inscripciones %}
+                        <tr>
+                            <td>
+                                <strong>{{ ins.curso.nombre }}</strong>
+                                <br>
+                                <span class="badge bg-primary-subtle text-primary badge-curso">
+                                    ID #{{ ins.curso.id }}
+                                </span>
+                            </td>
+                            <td>{{ ins.curso.nivel|default:"Sin nivel" }}</td>
+                            <td style="font-size:13px;">
+                                {{ ins.curso.descripcion|default:"Sin descripción registrada" }}
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'ver_curso' ins.curso.id %}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i> Ver curso
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="mb-2">
+                Aún no tienes cursos inscritos.
+            </p>
+            <a href="{% url 'listar_cursos' %}" class="btn btn-main btn-sm">
+                <i class="bi bi-plus-circle"></i> Inscribirme en un curso
+            </a>
+        {% endif %}
+    </div>
+
+</div>
+
+</body>
+</html>

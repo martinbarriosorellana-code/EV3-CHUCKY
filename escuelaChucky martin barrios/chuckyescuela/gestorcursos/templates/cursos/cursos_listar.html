@@ -1,0 +1,238 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Cursos</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- Iconos Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- DataTables + Bootstrap 5 -->
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+
+    <style>
+        body {
+            background: #eef2f7;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Tarjeta principal */
+        .panel-box {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 35px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        /* Título */
+        .panel-title {
+            font-size: 30px;
+            font-weight: 800;
+            color: #0d47a1;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .panel-subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        /* Encabezado tabla */
+        .table-header {
+            background: #0d47a1;
+            color: white;
+        }
+
+        /* Filas con hover */
+        tbody tr:hover {
+            background: #e7f0ff !important;
+            transition: 0.2s;
+        }
+
+        /* Botón volver */
+        .btn-back {
+            border-radius: 10px;
+            padding: 10px 20px;
+            background: #0d47a1;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover {
+            background: #062e6f;
+        }
+
+        .btn-add {
+            border-radius: 10px;
+            padding: 10px 20px;
+            background: #16a34a;
+            color: white;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-add:hover {
+            background: #15803d;
+        }
+
+        .badge-nivel {
+            font-size: 12px;
+        }
+
+        /* Animación suave */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- CAJA PRINCIPAL -->
+    <div class="panel-box">
+
+        <h1 class="panel-title">
+            <i class="bi bi-journal-bookmark"></i> Gestión de Cursos
+        </h1>
+
+        <p class="panel-subtitle">
+            Panel administrativo para gestionar los cursos disponibles en Chucky Escuela.
+        </p>
+
+        <!-- BOTONES SUPERIORES -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="{% url 'panel_admin' %}" class="btn btn-back">
+                <i class="bi bi-arrow-left-circle"></i> Volver al Panel
+            </a>
+
+            <a href="{% url 'agregar_curso' %}" class="btn btn-add">
+                <i class="bi bi-plus-circle"></i> Crear nuevo curso
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <!-- 👇 ID para DataTable -->
+            <table id="tabla_cursos" class="table table-hover table-bordered align-middle">
+
+                <thead class="table-header">
+                    <tr>
+                        <th>Nombre del curso</th>
+                        <th>Nivel</th>
+                        <th>Descripción</th>
+                        <th>Inscritos</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for curso in cursos %}
+                    <tr>
+                        <!-- Nombre -->
+                        <td>
+                            <strong>{{ curso.nombre }}</strong>
+                        </td>
+
+                        <!-- Nivel -->
+                        <td class="text-center">
+                            {% if curso.nivel %}
+                                <span class="badge bg-primary badge-nivel">
+                                    {{ curso.nivel }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">Sin nivel</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Descripción -->
+                        <td>
+                            {% if curso.descripcion %}
+                                {{ curso.descripcion|truncatechars:120 }}
+                            {% else %}
+                                <span class="text-muted">Sin descripción</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Cantidad de inscritos (relación inversa Inscripcion) -->
+                        <td class="text-center">
+                            {{ curso.inscripcion_set.count }}
+                        </td>
+
+                        <!-- Acciones -->
+                        <td class="text-center">
+                            <!-- Ver detalles del curso (vista ver_curso) -->
+                            <a href="{% url 'ver_curso' curso.id %}"
+                               class="btn btn-sm btn-outline-info mb-1">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+
+                            <!-- Editar curso -->
+                            <a href="{% url 'editar_curso' curso.id %}"
+                               class="btn btn-sm btn-outline-warning mb-1">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+
+                            <!-- Eliminar curso -->
+                            <a href="{% url 'eliminar_curso' curso.id %}"
+                               class="btn btn-sm btn-outline-danger mb-1"
+                               onclick="return confirm('¿Seguro que deseas eliminar este curso?');">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-3">
+                            <i class="bi bi-exclamation-circle"></i>
+                            No hay cursos registrados actualmente.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================== -->
+<!--   SCRIPTS DATATABLE   -->
+<!-- ===================== -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    // Inicializar DataTable con configuración básica en español
+    $(document).ready(function () {
+        $('#tabla_cursos').DataTable({
+            pageLength: 10,
+            lengthMenu: [5, 10, 25, 50],
+            order: [[0, 'asc']],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json"
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

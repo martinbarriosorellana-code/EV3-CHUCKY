@@ -1,0 +1,28 @@
+<h1>Gestión de Usuarios</h1>
+
+<h2>Estudiantes</h2>
+<ul>
+    {% for e in estudiantes %}
+        <li>{{ e.user.first_name }} {{ e.user.last_name }} — {{ e.rut }}</li>
+    {% empty %}
+        <li>No hay estudiantes registrados.</li>
+    {% endfor %}
+</ul>
+
+<h2>Docentes</h2>
+<ul>
+    {% for d in docentes %}
+        <li>{{ d.user.first_name }} {{ d.user.last_name }}</li>
+    {% empty %}
+        <li>No hay docentes registrados.</li>
+    {% endfor %}
+</ul>
+
+<h2>Administradores</h2>
+<ul>
+    {% for a in administradores %}
+        <li>{{ a.user.first_name }} {{ a.user.last_name }}</li>
+    {% empty %}
+        <li>No hay administradores registrados.</li>
+    {% endfor %}
+</ul>
